@@ -9,7 +9,7 @@ function AdminDashboard() {
   const [message, setMessage] = useState("");
 
   const CLOUD_NAME = "dyetyv1px"; // ✅ Your Cloudinary cloud name
-  const UPLOAD_PRESET = "ml_default"; // Make sure this is an unsigned preset
+  const UPLOAD_PRESET = "pedahel"; // Make sure this is an unsigned preset
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -148,3 +148,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
