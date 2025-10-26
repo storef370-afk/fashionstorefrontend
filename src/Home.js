@@ -30,19 +30,36 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-black text-white py-6 text-center shadow-md">
+   <div className="min-h-screen bg-gray-50">
+  {/* Sticky Header */}
+  <header className="bg-black text-white py-4 px-6 shadow-md sticky top-0 z-50">
+    <div className="flex flex-col md:flex-row items-center justify-between">
+      <div className="text-center md:text-left">
         <h1 className="text-3xl font-bold">🛍️ Fashion Store</h1>
         <p className="text-sm text-gray-300 mt-1">
           Trendy wears for Men, Women & Kids
         </p>
+      </div>
+      <div className="mt-3 md:mt-0 flex space-x-2">
+        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+          Men
+        </button>
+        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+          Women
+        </button>
+        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
+          Kids
+        </button>
         <Link
           to="/admin"
-          className="inline-block mt-3 bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+          className="inline-block bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition"
         >
           Admin Dashboard
         </Link>
-      </header>
+      </div>
+    </div>
+  </header>
+
 
       <main className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {products.slice(0, 4).map((product) => (
@@ -87,3 +104,4 @@ function Home() {
 }
 
 export default Home;
+
