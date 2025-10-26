@@ -5,7 +5,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
-const categories = ["Shoes", "Clothes", "Earrings", "Hats", "Bags", "Accessories"];
+const categories = [
+  "Shoes",
+  "Clothes",
+  "Earrings",
+  "Hats",
+  "Bags",
+  "Accessories",
+];
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -30,14 +37,12 @@ function Home() {
     pauseOnHover: true,
   };
 
-  // Filter by category if selected
   const filteredProducts = selectedCategory
     ? products.filter(
         (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
       )
     : products;
 
-  // Distribute products across 4 sections
   const sections = [[], [], [], []];
   filteredProducts.forEach((product, idx) => {
     sections[idx % 4].push(product);
@@ -57,15 +62,22 @@ function Home() {
         </div>
       </header>
 
-      {/* Sticky Category Bar (sticks under the header) */}
-      <div className="sticky top-[88px] bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
+      {/* Sticky + Scrollable Category Bar */}
+      <div
+        className="sticky top-[88px] bg-gray-50 z-40 py-3 shadow-md border-t border-gray-200
+        overflow-x-auto overflow-y-hidden px-4 flex space-x-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+        style={{
+          scrollBehavior: "smooth",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() =>
               setSelectedCategory(selectedCategory === cat ? null : cat)
             }
-            className={`inline-block mr-3 px-5 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105
+            className={`flex-shrink-0 px-5 py-2 rounded-full font-semibold shadow-md transition-transform duration-200 hover:scale-105
               ${
                 selectedCategory === cat
                   ? "bg-black text-white"
@@ -78,7 +90,7 @@ function Home() {
       </div>
 
       {/* Main Product Sections */}
-      <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
         {sections.map((sectionProducts, idx) => (
           <section
             key={idx}
