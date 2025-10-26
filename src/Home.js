@@ -57,8 +57,8 @@ function Home() {
         </div>
       </header>
 
-      {/* Sticky Category Bar */}
-      <div className="sticky top-[88px] bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
+       {/* Sticky Category Bar (directly below header) */}
+      <div className="fixed top-[100px] left-0 w-full bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -130,3 +130,4 @@ function Home() {
 }
 
 export default Home;
+
