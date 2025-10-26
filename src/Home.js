@@ -5,7 +5,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
-
 const categories = ["Shoes", "Clothes", "Earrings", "Hats", "Bags", "Accessories"];
 
 function Home() {
@@ -16,12 +15,11 @@ function Home() {
     axios
       .get(`${API_URL}/api/products`)
       .then((res) => setProducts(res.data))
-      .catch((err) => console.error("Error fetching products:", err));
+      .catch((err) => console.error(err));
   }, []);
 
-  // Slider settings
   const sliderSettings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 800,
     slidesToShow: 1,
@@ -32,17 +30,16 @@ function Home() {
     pauseOnHover: true,
   };
 
-  // Filter products by selected category if any
+  // Filter by category if selected
   const filteredProducts = selectedCategory
-    ? products.filter(
-        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
-      )
+    ? products.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase())
     : products;
 
-  // Split products into 4 sections
-  const sections = [0, 1, 2, 3].map((i) =>
-    filteredProducts.slice(i * 4, i * 4 + 4)
-  );
+  // Distribute products across 4 sections using round-robin
+  const sections = [[], [], [], []];
+  filteredProducts.forEach((product, idx) => {
+    sections[idx % 4].push(product);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,7 +51,7 @@ function Home() {
         </div>
       </header>
 
-      {/* Sticky Horizontal Category Bar */}
+      {/* Sticky Category Bar */}
       <div className="sticky top-[72px] bg-gray-50 z-50 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
         {categories.map((cat) => (
           <button
@@ -74,51 +71,42 @@ function Home() {
         ))}
       </div>
 
-      {/* 4 Product Sections */}
-      {sections.map((sectionProducts, idx) => (
-        <section key={idx} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sectionProducts.length > 0 ? (
-            sectionProducts.map((product) => (
-              <div
-                key={product._id}
-                className="bg-white rounded-xl shadow-lg overflow-hidden"
-              >
-                <Slider {...sliderSettings}>
-                  {product.image && (
-                    <div>
+      {/* 4 Fixed Sections */}
+      <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {sections.map((sectionProducts, idx) => (
+          <section key={idx} className="w-full bg-gray-100 rounded-xl p-4 shadow-md">
+            <Slider {...sliderSettings}>
+              {sectionProducts.length > 0 ? (
+                sectionProducts.map((product) => (
+                  <div key={product._id} className="px-2">
+                    {product.image && (
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-80 object-cover"
+                        className="w-full h-80 object-cover rounded-xl"
                       />
-                    </div>
-                  )}
-                  {product.video && (
-                    <div>
+                    )}
+                    {product.video && (
                       <video
                         src={product.video}
                         controls
-                        className="w-full h-80 object-cover"
+                        className="w-full h-80 object-cover rounded-xl"
                       />
+                    )}
+                    <div className="mt-2 text-center">
+                      <h2 className="text-lg font-bold">{product.name}</h2>
+                      <p className="text-gray-600">{product.category || "Uncategorized"}</p>
+                      <p className="text-gray-800 font-semibold">₦{product.price}</p>
                     </div>
-                  )}
-                </Slider>
-                <div className="p-4 bg-white">
-                  <h2 className="text-xl font-bold">{product.name}</h2>
-                  <p className="text-gray-600">
-                    {product.category || "Uncategorized"}
-                  </p>
-                  <p className="text-gray-800 font-semibold">₦{product.price}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="col-span-full text-center text-gray-500 text-lg">
-              No products in this section.
-            </p>
-          )}
-        </section>
-      ))}
+                  </div>
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No products yet.</p>
+              )}
+            </Slider>
+          </section>
+        ))}
+      </div>
 
       {/* Footer */}
       <footer className="bg-black text-gray-400 text-center py-4 mt-6">
