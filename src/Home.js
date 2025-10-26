@@ -6,8 +6,11 @@ import "slick-carousel/slick/slick-theme.css";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
 
+const categories = ["Shoes", "Clothes", "Earrings", "Hats", "Bags", "Accessories"];
+
 function Home() {
   const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     axios
@@ -28,32 +31,44 @@ function Home() {
     pauseOnHover: true,
   };
 
+  // Filter products by selected category
+  const filteredProducts = selectedCategory
+    ? products.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase())
+    : products;
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sticky Header */}
       <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ FABRIOC DECO</h1>
-            <p className="text-gray-300 text-lg">Trendy Wears for Men, Women & Kids</p>
-          </div>
-          <div className="mt-4 md:mt-0 flex space-x-4">
-            <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
-              Men
-            </button>
-            <button className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
-              Women
-            </button>
-            <button className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
-              Kids
-            </button>
-          </div>
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ FABRI-DECO</h1>
+          <p className="text-gray-300 text-lg">Trendy Wears & Accessories for Everyone</p>
         </div>
       </header>
 
-      {/* Product Sections */}
+      {/* Sticky Horizontal Category Bar */}
+      <div className="sticky top-[72px] bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() =>
+              setSelectedCategory(selectedCategory === cat ? null : cat)
+            }
+            className={`inline-block mr-3 px-5 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105
+              ${
+                selectedCategory === cat
+                  ? "bg-black text-white"
+                  : "bg-white text-black hover:bg-gray-200"
+              }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Products Section */}
       <main className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-        {products.slice(0, 4).map((product) => (
+        {filteredProducts.slice(0, 8).map((product) => (
           <div
             key={product._id}
             className="bg-white rounded-xl shadow-lg overflow-hidden"
@@ -85,15 +100,19 @@ function Home() {
             </div>
           </div>
         ))}
+        {filteredProducts.length === 0 && (
+          <p className="col-span-full text-center text-gray-500 text-lg">
+            No products in this category yet.
+          </p>
+        )}
       </main>
 
+      {/* Footer */}
       <footer className="bg-black text-gray-400 text-center py-4 mt-6">
-        © {new Date().getFullYear()} Fashion Store. All rights reserved.
+        © {new Date().getFullYear()} FABRI-DECO. All rights reserved.
       </footer>
     </div>
   );
 }
 
 export default Home;
-
-
