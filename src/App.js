@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./Home";
 import Admin from "./Admin";
-import Home from "./Home"; // import the new Home component
+import CategoryPage from "./CategoryPage";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/:category" element={<CategoryPage />} />
       </Routes>
     </Router>
   );
