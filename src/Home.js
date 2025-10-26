@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import axios from "axios";
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
@@ -19,7 +19,8 @@ function Home() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  const settings = {
+  // Slider settings
+  const sliderSettings = {
     dots: true,
     infinite: true,
     speed: 800,
@@ -31,14 +32,21 @@ function Home() {
     pauseOnHover: true,
   };
 
-  // Filter products by selected category
+  // Filter products by selected category if any
   const filteredProducts = selectedCategory
-    ? products.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase())
+    ? products.filter(
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+      )
     : products;
+
+  // Split products into 4 sections
+  const sections = [0, 1, 2, 3].map((i) =>
+    filteredProducts.slice(i * 4, i * 4 + 4)
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sticky Header */}
+      {/* Header */}
       <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ FABRI-DECO</h1>
@@ -47,7 +55,7 @@ function Home() {
       </header>
 
       {/* Sticky Horizontal Category Bar */}
-      <div className="sticky top-[72px] bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
+      <div className="sticky top-[72px] bg-gray-50 z-50 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -66,46 +74,51 @@ function Home() {
         ))}
       </div>
 
-      {/* Products Section */}
-      <main className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-        {filteredProducts.slice(0, 8).map((product) => (
-          <div
-            key={product._id}
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
-          >
-            <Slider {...settings}>
-              {product.image && (
-                <div>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-80 object-cover"
-                  />
+      {/* 4 Product Sections */}
+      {sections.map((sectionProducts, idx) => (
+        <section key={idx} className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {sectionProducts.length > 0 ? (
+            sectionProducts.map((product) => (
+              <div
+                key={product._id}
+                className="bg-white rounded-xl shadow-lg overflow-hidden"
+              >
+                <Slider {...sliderSettings}>
+                  {product.image && (
+                    <div>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-80 object-cover"
+                      />
+                    </div>
+                  )}
+                  {product.video && (
+                    <div>
+                      <video
+                        src={product.video}
+                        controls
+                        className="w-full h-80 object-cover"
+                      />
+                    </div>
+                  )}
+                </Slider>
+                <div className="p-4 bg-white">
+                  <h2 className="text-xl font-bold">{product.name}</h2>
+                  <p className="text-gray-600">
+                    {product.category || "Uncategorized"}
+                  </p>
+                  <p className="text-gray-800 font-semibold">₦{product.price}</p>
                 </div>
-              )}
-              {product.video && (
-                <div>
-                  <video
-                    src={product.video}
-                    controls
-                    className="w-full h-80 object-cover"
-                  />
-                </div>
-              )}
-            </Slider>
-            <div className="p-4 bg-white">
-              <h2 className="text-xl font-bold">{product.name}</h2>
-              <p className="text-gray-600">{product.category || "Uncategorized"}</p>
-              <p className="text-gray-800 font-semibold">₦{product.price}</p>
-            </div>
-          </div>
-        ))}
-        {filteredProducts.length === 0 && (
-          <p className="col-span-full text-center text-gray-500 text-lg">
-            No products in this category yet.
-          </p>
-        )}
-      </main>
+              </div>
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500 text-lg">
+              No products in this section.
+            </p>
+          )}
+        </section>
+      ))}
 
       {/* Footer */}
       <footer className="bg-black text-gray-400 text-center py-4 mt-6">
