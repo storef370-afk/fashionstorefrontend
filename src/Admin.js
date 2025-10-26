@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // live backend
-const ADMIN_PASSWORD = "Pedahelmylove247"; // replace with secure method if needed
+const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // backend
+const ADMIN_PASSWORD = "Pedahelmylove247";
 
 function Admin() {
   const [formData, setFormData] = useState({
@@ -16,36 +16,29 @@ function Admin() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle text inputs
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Handle file inputs
   const handleImageChange = (e) => setImageFile(e.target.files[0]);
   const handleVideoChange = (e) => setVideoFile(e.target.files[0]);
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; // prevent multiple submits
+    if (loading) return;
     setLoading(true);
     setMessage("Uploading...");
 
     try {
-      let imageUrl = "";
-      let videoUrl = "";
+      // 1️⃣ Upload image to Cloudinary
+      if (!imageFile) throw new Error("Image file is required");
 
-      // 1️⃣ Upload image
-      if (imageFile) {
-        const imgData = new FormData();
-        imgData.append("file", imageFile);
-        const imgRes = await axios.post(`${API_URL}/api/upload`, imgData);
-        imageUrl = imgRes.data.url;
-      } else {
-        throw new Error("Image file is required");
-      }
+      const imgData = new FormData();
+      imgData.append("file", imageFile);
+      const imgRes = await axios.post(`${API_URL}/api/upload`, imgData);
+      const imageUrl = imgRes.data.url;
 
       // 2️⃣ Upload video (optional)
+      let videoUrl = "";
       if (videoFile) {
         const vidData = new FormData();
         vidData.append("file", videoFile);
@@ -53,7 +46,7 @@ function Admin() {
         videoUrl = vidRes.data.url;
       }
 
-      // 3️⃣ Send product data as JSON to /api/admin/products
+      // 3️⃣ Send product data as JSON
       await axios.post(`${API_URL}/api/admin/products`, {
         password: ADMIN_PASSWORD,
         name: formData.name,
@@ -61,7 +54,7 @@ function Admin() {
         category: formData.category,
         description: formData.description,
         image: imageUrl,
-        video: videoUrl, // optional
+        video: videoUrl,
       });
 
       setMessage("✅ Product added successfully!");
