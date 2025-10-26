@@ -4,7 +4,8 @@ import axios from "axios";
 import "./App.css";
 import Admin from "./Admin";
 
-const API_URL = "https://fashionstorebackend-91gq.onrender.com";
+const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
+
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -16,6 +17,8 @@ function Home() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
+
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
