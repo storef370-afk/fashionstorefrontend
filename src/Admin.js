@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // live backend
-const ADMIN_PASSWORD = "Pedahelmylove247"; // or use env variable
+const ADMIN_PASSWORD = "Pedahelmylove247"; // replace with secure method if needed
 
 function Admin() {
   const [formData, setFormData] = useState({
@@ -14,29 +14,38 @@ function Admin() {
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Handle text inputs
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  // Handle file inputs
   const handleImageChange = (e) => setImageFile(e.target.files[0]);
   const handleVideoChange = (e) => setVideoFile(e.target.files[0]);
 
+  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return; // prevent multiple submits
+    setLoading(true);
     setMessage("Uploading...");
 
     try {
-      // --- 1. Upload image to Cloudinary ---
       let imageUrl = "";
+      let videoUrl = "";
+
+      // 1️⃣ Upload image
       if (imageFile) {
         const imgData = new FormData();
         imgData.append("file", imageFile);
         const imgRes = await axios.post(`${API_URL}/api/upload`, imgData);
         imageUrl = imgRes.data.url;
+      } else {
+        throw new Error("Image file is required");
       }
 
-      // --- 2. Upload video if needed ---
-      let videoUrl = "";
+      // 2️⃣ Upload video (optional)
       if (videoFile) {
         const vidData = new FormData();
         vidData.append("file", videoFile);
@@ -44,15 +53,15 @@ function Admin() {
         videoUrl = vidRes.data.url;
       }
 
-      // --- 3. Send product info to admin/products ---
+      // 3️⃣ Send product data as JSON to /api/admin/products
       await axios.post(`${API_URL}/api/admin/products`, {
         password: ADMIN_PASSWORD,
         name: formData.name,
-        price: formData.price,
+        price: Number(formData.price),
         category: formData.category,
         description: formData.description,
         image: imageUrl,
-        video: videoUrl, // optional field in backend
+        video: videoUrl, // optional
       });
 
       setMessage("✅ Product added successfully!");
@@ -62,7 +71,10 @@ function Admin() {
     } catch (err) {
       console.error("Error uploading product:", err);
       if (err.response?.status === 401) setMessage("❌ Unauthorized: wrong password");
+      else if (err.response?.status === 400) setMessage("❌ Bad Request: check all fields");
       else setMessage("❌ Failed to upload product.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,20 +118,27 @@ function Admin() {
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
+
         <label className="block">
           Image Upload:
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          <input type="file" accept="image/*" onChange={handleImageChange} required />
         </label>
+
         <label className="block">
           Video Upload (optional):
           <input type="file" accept="video/*" onChange={handleVideoChange} />
         </label>
+
         <button
           type="submit"
-          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+          disabled={loading}
+          className={`w-full py-2 rounded text-white ${
+            loading ? "bg-gray-400" : "bg-black hover:bg-gray-800"
+          }`}
         >
-          Upload Product
+          {loading ? "Uploading..." : "Upload Product"}
         </button>
+
         {message && <p className="text-center mt-2 text-sm">{message}</p>}
       </form>
     </div>
