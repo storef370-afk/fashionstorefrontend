@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 
@@ -18,7 +17,7 @@ function Home() {
   }, []);
 
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
     speed: 800,
     slidesToShow: 1,
@@ -30,37 +29,29 @@ function Home() {
   };
 
   return (
-   <div className="min-h-screen bg-gray-50">
-  {/* Sticky Header */}
-  <header className="bg-black text-white py-4 px-6 shadow-md sticky top-0 z-50">
-    <div className="flex flex-col md:flex-row items-center justify-between">
-      <div className="text-center md:text-left">
-        <h1 className="text-3xl font-bold">🛍️ Fashion Store</h1>
-        <p className="text-sm text-gray-300 mt-1">
-          Trendy wears for Men, Women & Kids
-        </p>
-      </div>
-      <div className="mt-3 md:mt-0 flex space-x-2">
-        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-          Men
-        </button>
-        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-          Women
-        </button>
-        <button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-          Kids
-        </button>
-        <Link
-          to="/admin"
-          className="inline-block bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition"
-        >
-          Admin Dashboard
-        </Link>
-      </div>
-    </div>
-  </header>
+    <div className="min-h-screen bg-gray-50">
+      {/* Sticky Header */}
+      <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
+        <div className="flex flex-col md:flex-row items-center justify-between">
+          <div className="text-center md:text-left">
+            <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ Fashion Store</h1>
+            <p className="text-gray-300 text-lg">Trendy Wears for Men, Women & Kids</p>
+          </div>
+          <div className="mt-4 md:mt-0 flex space-x-4">
+            <button className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
+              Men
+            </button>
+            <button className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
+              Women
+            </button>
+            <button className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:scale-105 transform transition">
+              Kids
+            </button>
+          </div>
+        </div>
+      </header>
 
-
+      {/* Product Sections */}
       <main className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
         {products.slice(0, 4).map((product) => (
           <div
@@ -104,4 +95,3 @@ function Home() {
 }
 
 export default Home;
-
