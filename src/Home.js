@@ -34,7 +34,7 @@ function Home() {
       <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="text-center md:text-left">
-            <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ FABRIOC-DECO</h1>
+            <h1 className="text-4xl font-extrabold tracking-wide mb-2">🛍️ FABRIOC DECO</h1>
             <p className="text-gray-300 text-lg">Trendy Wears for Men, Women & Kids</p>
           </div>
           <div className="mt-4 md:mt-0 flex space-x-4">
@@ -95,4 +95,5 @@ function Home() {
 }
 
 export default Home;
+
 
