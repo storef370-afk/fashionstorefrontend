@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // your live backend
+const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // live backend
+const ADMIN_PASSWORD = "Pedahelmylove247"; // or use env variable
 
 function Admin() {
   const [formData, setFormData] = useState({
@@ -10,44 +11,58 @@ function Admin() {
     category: "",
     description: "",
   });
-
   const [imageFile, setImageFile] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
   const [message, setMessage] = useState("");
 
-  // Handle text input changes
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  // Handle file inputs
   const handleImageChange = (e) => setImageFile(e.target.files[0]);
   const handleVideoChange = (e) => setVideoFile(e.target.files[0]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("Uploading...");
 
     try {
-      const data = new FormData();
-      data.append("name", formData.name);
-      data.append("price", formData.price);
-      data.append("category", formData.category);
-      data.append("description", formData.description);
+      // --- 1. Upload image to Cloudinary ---
+      let imageUrl = "";
+      if (imageFile) {
+        const imgData = new FormData();
+        imgData.append("file", imageFile);
+        const imgRes = await axios.post(`${API_URL}/api/upload`, imgData);
+        imageUrl = imgRes.data.url;
+      }
 
-      if (imageFile) data.append("image", imageFile);
-      if (videoFile) data.append("video", videoFile);
+      // --- 2. Upload video if needed ---
+      let videoUrl = "";
+      if (videoFile) {
+        const vidData = new FormData();
+        vidData.append("file", videoFile);
+        const vidRes = await axios.post(`${API_URL}/api/upload`, vidData);
+        videoUrl = vidRes.data.url;
+      }
 
-      const res = await axios.post(`${API_URL}/api/upload`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // --- 3. Send product info to admin/products ---
+      await axios.post(`${API_URL}/api/admin/products`, {
+        password: ADMIN_PASSWORD,
+        name: formData.name,
+        price: formData.price,
+        category: formData.category,
+        description: formData.description,
+        image: imageUrl,
+        video: videoUrl, // optional field in backend
       });
 
-      setMessage("✅ Product uploaded successfully!");
+      setMessage("✅ Product added successfully!");
       setFormData({ name: "", price: "", category: "", description: "" });
       setImageFile(null);
       setVideoFile(null);
-    } catch (error) {
-      console.error("Upload failed:", error);
-      setMessage("❌ Failed to upload product.");
+    } catch (err) {
+      console.error("Error uploading product:", err);
+      if (err.response?.status === 401) setMessage("❌ Unauthorized: wrong password");
+      else setMessage("❌ Failed to upload product.");
     }
   };
 
@@ -79,7 +94,7 @@ function Admin() {
         <input
           type="text"
           name="category"
-          placeholder="Category (Men, Women, Kids...)"
+          placeholder="Category"
           value={formData.category}
           onChange={handleChange}
           className="w-full border p-2 rounded"
@@ -91,24 +106,20 @@ function Admin() {
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
-
         <label className="block">
           Image Upload:
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </label>
-
         <label className="block">
           Video Upload (optional):
           <input type="file" accept="video/*" onChange={handleVideoChange} />
         </label>
-
         <button
           type="submit"
           className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
         >
           Upload Product
         </button>
-
         {message && <p className="text-center mt-2 text-sm">{message}</p>}
       </form>
     </div>
