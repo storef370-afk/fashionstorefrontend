@@ -8,10 +8,10 @@ function Admin() {
   const [form, setForm] = useState({
     name: "",
     price: "",
-    image: "",
     category: "",
     description: "",
   });
+  const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
 
   const handleLogin = async (e) => {
@@ -26,16 +26,35 @@ function Admin() {
     else setMessage("❌ Wrong password");
   };
 
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${API_URL}/api/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    const data = await res.json();
+    return data.url;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    let mediaUrl = "";
+    if (file) {
+      setMessage("⏳ Uploading media...");
+      mediaUrl = await handleUpload();
+    }
+
     const res = await fetch(`${API_URL}/api/admin/products`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, password }),
+      body: JSON.stringify({ ...form, image: mediaUrl, password }),
     });
+
     if (res.ok) {
       setMessage("✅ Product uploaded successfully!");
-      setForm({ name: "", price: "", image: "", category: "", description: "" });
+      setForm({ name: "", price: "", category: "", description: "" });
+      setFile(null);
     } else {
       setMessage("❌ Failed to upload product");
     }
@@ -80,14 +99,7 @@ function Admin() {
         />
         <input
           type="text"
-          placeholder="Image URL"
-          value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Category (Men, Women, Kids, Unisex)"
+          placeholder="Category"
           value={form.category}
           onChange={(e) => setForm({ ...form, category: e.target.value })}
           required
@@ -98,6 +110,13 @@ function Admin() {
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           required
         ></textarea>
+
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+
         <button type="submit">Add Product</button>
       </form>
       <p>{message}</p>
