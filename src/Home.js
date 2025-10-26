@@ -5,14 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com";
-const categories = [
-  "Shoes",
-  "Clothes",
-  "Earrings",
-  "Hats",
-  "Bags",
-  "Accessories",
-];
+const categories = ["Shoes", "Clothes", "Earrings", "Hats", "Bags", "Accessories"];
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -33,7 +26,8 @@ function Home() {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    fade: true,
+    fade: false, // change to false to allow swipe
+    swipeToSlide: true,
     pauseOnHover: true,
   };
 
@@ -43,6 +37,7 @@ function Home() {
       )
     : products;
 
+  // Distribute products across 4 sections evenly
   const sections = [[], [], [], []];
   filteredProducts.forEach((product, idx) => {
     sections[idx % 4].push(product);
@@ -50,10 +45,10 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Fixed Header */}
-      <header className="fixed top-0 left-0 w-full bg-black text-white py-5 px-6 shadow-lg z-50">
+      {/* Header */}
+      <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-wide mb-1">
+          <h1 className="text-4xl font-extrabold tracking-wide mb-2">
             🛍️ FABRI-DECO
           </h1>
           <p className="text-gray-300 text-lg">
@@ -62,35 +57,27 @@ function Home() {
         </div>
       </header>
 
-      {/* Fixed Category Bar (directly below header) */}
-      <div
-        className="fixed top-[96px] left-0 w-full bg-gray-50 z-40 py-3 shadow-md border-t border-gray-200
-        overflow-x-auto overflow-y-hidden px-4 flex space-x-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
-        style={{
-          scrollBehavior: "smooth",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
+      {/* Category Bar (sticky and visible below header) */}
+      <div className="sticky top-[72px] bg-white z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() =>
               setSelectedCategory(selectedCategory === cat ? null : cat)
             }
-            className={`flex-shrink-0 px-5 py-2 rounded-full font-semibold shadow-md transition-transform duration-200 hover:scale-105
-              ${
-                selectedCategory === cat
-                  ? "bg-black text-white"
-                  : "bg-white text-black hover:bg-gray-200"
-              }`}
+            className={`inline-block mr-3 px-5 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105 ${
+              selectedCategory === cat
+                ? "bg-black text-white"
+                : "bg-gray-100 text-black hover:bg-gray-200"
+            }`}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Content (push down to avoid overlap with fixed header + category bar) */}
-      <main className="pt-[170px] p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Product Sections (4 total) */}
+      <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
         {sections.map((sectionProducts, idx) => (
           <section
             key={idx}
@@ -134,7 +121,7 @@ function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black text-gray-400 text-center py-4 mt-10">
+      <footer className="bg-black text-gray-400 text-center py-4 mt-6">
         © {new Date().getFullYear()} FABRI-DECO. All rights reserved.
       </footer>
     </div>
