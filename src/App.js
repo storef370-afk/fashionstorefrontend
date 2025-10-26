@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import Admin from "./Admin";
 
-const API_URL = "https://fashionstorebackend-91gq.onrender.com";
+const API_URL = "https://fashionstorebackend-91gq.onrender.com"; // your backend
 
 function Home() {
   const [products, setProducts] = useState([]);
