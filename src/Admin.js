@@ -23,7 +23,7 @@ function Admin() {
     });
     const data = await res.json();
     if (data.success) setIsLoggedIn(true);
-    else setMessage("Wrong password");
+    else setMessage("❌ Wrong password");
   };
 
   const handleSubmit = async (e) => {
@@ -34,10 +34,10 @@ function Admin() {
       body: JSON.stringify({ ...form, password }),
     });
     if (res.ok) {
-      setMessage("✅ Product uploaded!");
+      setMessage("✅ Product uploaded successfully!");
       setForm({ name: "", price: "", image: "", category: "", description: "" });
     } else {
-      setMessage("❌ Error uploading product");
+      setMessage("❌ Failed to upload product");
     }
   };
 
@@ -48,7 +48,7 @@ function Admin() {
         <form onSubmit={handleLogin}>
           <input
             type="password"
-            placeholder="Enter Admin Password"
+            placeholder="Enter admin password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -62,7 +62,7 @@ function Admin() {
 
   return (
     <div className="admin-page">
-      <h2>Upload New Product</h2>
+      <h2>Upload Product</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
