@@ -9,7 +9,7 @@ function AdminDashboard() {
   const [message, setMessage] = useState("");
 
   const CLOUD_NAME = "dyetyv1px"; // Your Cloudinary cloud name
-  const UPLOAD_PRESET = "ml_default"; // You can set this in your Cloudinary settings
+  const UPLOAD_PRESET = "ml_default"; // Cloudinary upload preset
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ function AdminDashboard() {
     }
 
     try {
-      // Step 1: Upload file to Cloudinary
+      // Step 1: Upload to Cloudinary
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", UPLOAD_PRESET);
@@ -37,7 +37,7 @@ function AdminDashboard() {
       const uploadData = await uploadRes.json();
       const imageUrl = uploadData.secure_url;
 
-      // Step 2: Save product info to your backend
+      // Step 2: Save product to backend
       const productRes = await fetch(
         "https://fashionstorebackend-1-sa6g.onrender.com/api/admin/products",
         {
@@ -71,49 +71,70 @@ function AdminDashboard() {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "40px auto", textAlign: "center" }}>
-      <h2>🛍️ Admin Dashboard - Upload Product</h2>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-10 px-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-8">
+        <h2 className="text-3xl font-bold text-center mb-6 text-black">
+          🛍️ FABRI-DECO Admin
+        </h2>
+        <p className="text-center text-gray-500 mb-8">
+          Upload new products for your fashion store
+        </p>
 
-      <form onSubmit={handleUpload} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <input
-          type="text"
-          placeholder="Product Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Price ($)"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows="4"
-        ></textarea>
-        <input
-          type="file"
-          accept="image/*,video/*"
-          onChange={(e) => setFile(e.target.files[0])}
-          required
-        />
+        <form onSubmit={handleUpload} className="space-y-5">
+          <input
+            type="text"
+            placeholder="Product Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
 
-        <button type="submit" style={{ padding: "10px", background: "#333", color: "white", border: "none" }}>
-          Upload Product
-        </button>
-      </form>
+          <input
+            type="number"
+            placeholder="Price (₦)"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
 
-      {message && <p style={{ marginTop: "20px" }}>{message}</p>}
+          <input
+            type="text"
+            placeholder="Category (e.g., Shoes, Bags, Clothes)"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          />
+
+          <textarea
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows="4"
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-black"
+          ></textarea>
+
+          <input
+            type="file"
+            accept="image/*,video/*"
+            onChange={(e) => setFile(e.target.files[0])}
+            required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 cursor-pointer focus:outline-none"
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all duration-200"
+          >
+            Upload Product
+          </button>
+        </form>
+
+        {message && (
+          <p className="text-center mt-6 text-gray-700 font-medium">{message}</p>
+        )}
+      </div>
     </div>
   );
 }
