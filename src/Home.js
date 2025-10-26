@@ -50,8 +50,8 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sticky Header */}
-      <header className="bg-black text-white py-5 px-6 shadow-lg sticky top-0 z-50">
+      {/* Fixed Header */}
+      <header className="fixed top-0 left-0 w-full bg-black text-white py-5 px-6 shadow-lg z-50">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-wide mb-1">
             🛍️ FABRI-DECO
@@ -62,9 +62,9 @@ function Home() {
         </div>
       </header>
 
-      {/* Sticky + Scrollable Category Bar */}
+      {/* Fixed Category Bar (directly below header) */}
       <div
-        className="sticky top-[88px] bg-gray-50 z-40 py-3 shadow-md border-t border-gray-200
+        className="fixed top-[96px] left-0 w-full bg-gray-50 z-40 py-3 shadow-md border-t border-gray-200
         overflow-x-auto overflow-y-hidden px-4 flex space-x-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
         style={{
           scrollBehavior: "smooth",
@@ -89,8 +89,8 @@ function Home() {
         ))}
       </div>
 
-      {/* Main Product Sections */}
-      <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      {/* Content (push down to avoid overlap with fixed header + category bar) */}
+      <main className="pt-[170px] p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((sectionProducts, idx) => (
           <section
             key={idx}
