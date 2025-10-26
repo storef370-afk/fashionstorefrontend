@@ -37,7 +37,7 @@ function Home() {
       )
     : products;
 
-  // Distribute products across 4 sections (round-robin)
+  // Distribute products across 4 sections
   const sections = [[], [], [], []];
   filteredProducts.forEach((product, idx) => {
     sections[idx % 4].push(product);
@@ -45,10 +45,10 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
+      {/* Sticky Header */}
+      <header className="bg-black text-white py-5 px-6 shadow-lg sticky top-0 z-50">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-wide mb-2">
+          <h1 className="text-4xl font-extrabold tracking-wide mb-1">
             🛍️ FABRI-DECO
           </h1>
           <p className="text-gray-300 text-lg">
@@ -57,8 +57,8 @@ function Home() {
         </div>
       </header>
 
-       {/* Sticky Category Bar (directly below header) */}
-      <div className="fixed top-[100px] left-0 w-full bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
+      {/* Sticky Category Bar (sticks under the header) */}
+      <div className="sticky top-[88px] bg-gray-50 z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -77,7 +77,7 @@ function Home() {
         ))}
       </div>
 
-      {/* 4 Fixed Sections */}
+      {/* Main Product Sections */}
       <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((sectionProducts, idx) => (
           <section
@@ -122,7 +122,7 @@ function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black text-gray-400 text-center py-4 mt-6">
+      <footer className="bg-black text-gray-400 text-center py-4 mt-10">
         © {new Date().getFullYear()} FABRI-DECO. All rights reserved.
       </footer>
     </div>
@@ -130,4 +130,3 @@ function Home() {
 }
 
 export default Home;
-
