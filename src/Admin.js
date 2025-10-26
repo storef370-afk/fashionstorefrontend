@@ -1,35 +1,50 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const API_URL = "https://fashionstorebackend-91gq.onrender.com";
+const API_URL = "https://fashionstorebackend-1-sa6g.onrender.com"; // your live backend
 
 function Admin() {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     category: "",
-    image: "",
-    video: "",
+    description: "",
   });
 
+  const [imageFile, setImageFile] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
   const [message, setMessage] = useState("");
 
+  // Handle text input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle file inputs
+  const handleImageChange = (e) => setImageFile(e.target.files[0]);
+  const handleVideoChange = (e) => setVideoFile(e.target.files[0]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await axios.post(`${API_URL}/api/products`, formData);
-      setMessage("✅ Product uploaded successfully!");
-      setFormData({
-        name: "",
-        price: "",
-        category: "",
-        image: "",
-        video: "",
+      const data = new FormData();
+      data.append("name", formData.name);
+      data.append("price", formData.price);
+      data.append("category", formData.category);
+      data.append("description", formData.description);
+
+      if (imageFile) data.append("image", imageFile);
+      if (videoFile) data.append("video", videoFile);
+
+      const res = await axios.post(`${API_URL}/api/upload`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
+      setMessage("✅ Product uploaded successfully!");
+      setFormData({ name: "", price: "", category: "", description: "" });
+      setImageFile(null);
+      setVideoFile(null);
     } catch (error) {
       console.error("Upload failed:", error);
       setMessage("❌ Failed to upload product.");
@@ -69,22 +84,23 @@ function Admin() {
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
-        <input
-          type="text"
-          name="image"
-          placeholder="Image URL (from Cloudinary)"
-          value={formData.image}
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={formData.description}
           onChange={handleChange}
           className="w-full border p-2 rounded"
         />
-        <input
-          type="text"
-          name="video"
-          placeholder="Video URL (optional)"
-          value={formData.video}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-        />
+
+        <label className="block">
+          Image Upload:
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+        </label>
+
+        <label className="block">
+          Video Upload (optional):
+          <input type="file" accept="video/*" onChange={handleVideoChange} />
+        </label>
 
         <button
           type="submit"
