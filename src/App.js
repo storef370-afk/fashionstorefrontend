@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
+import Admin from "./Admin";
 
-function App() {
+const API_URL = "https://fashionstorebackend-91gq.onrender.com";
+
+function Home() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("https://fashionstorebackend-91gq.onrender.com/api/products")
+    fetch(`${API_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error("Error fetching products:", err));
@@ -16,6 +20,9 @@ function App() {
       <header>
         <h1>🛍️ Fashion Store</h1>
         <p>Trendy wears for everyone — Men, Women, and Kids.</p>
+        <Link className="admin-link" to="/admin">
+          Go to Admin Page
+        </Link>
       </header>
 
       <div className="product-grid">
@@ -29,12 +36,23 @@ function App() {
             </div>
           ))
         ) : (
-          <p>Loading products...</p>
+          <p>No products yet.</p>
         )}
       </div>
 
       <footer>© {new Date().getFullYear()} Fashion Store. All rights reserved.</footer>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
+      </Routes>
+    </Router>
   );
 }
 
