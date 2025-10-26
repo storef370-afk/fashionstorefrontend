@@ -1,36 +1,39 @@
 import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products") // replace with your Render URL later
+    fetch("https://fashionstorebackend-91gq.onrender.com/api/products")
       .then((res) => res.json())
       .then((data) => setProducts(data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>🛍️ Fashion Store</h1>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
+    <div className="App">
+      <header>
+        <h1>🛍️ Fashion Store</h1>
+        <p>Trendy wears for everyone — Men, Women, and Kids.</p>
+      </header>
+
+      <div className="product-grid">
         {products.length > 0 ? (
-          products.map((p) => (
-            <div key={p._id} style={{ border: "1px solid #ccc", padding: "10px", borderRadius: "8px" }}>
-              <img
-                src={p.image || "https://via.placeholder.com/200"}
-                alt={p.name}
-                style={{ width: "100%", borderRadius: "5px" }}
-              />
-              <h3>{p.name}</h3>
-              <p>{p.category}</p>
-              <p>${p.price}</p>
+          products.map((product) => (
+            <div className="product-card" key={product._id}>
+              <img src={product.image} alt={product.name} />
+              <h3>{product.name}</h3>
+              <p>₦{product.price}</p>
+              <small>{product.category}</small>
             </div>
           ))
         ) : (
-          <p>No products yet</p>
+          <p>Loading products...</p>
         )}
       </div>
+
+      <footer>© {new Date().getFullYear()} Fashion Store. All rights reserved.</footer>
     </div>
   );
 }
