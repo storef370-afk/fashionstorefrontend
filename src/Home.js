@@ -51,25 +51,34 @@ function Home() {
         </div>
       </header>
 
-      {/* Sticky Category Bar */}
-      <div className="sticky top-[72px] bg-gray-50 z-50 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() =>
-              setSelectedCategory(selectedCategory === cat ? null : cat)
-            }
-            className={`inline-block mr-3 px-5 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105
-              ${
-                selectedCategory === cat
-                  ? "bg-black text-white"
-                  : "bg-white text-black hover:bg-gray-200"
-              }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+      <div className="min-h-screen bg-gray-50">
+  {/* Header */}
+  <header className="bg-black text-white py-4 px-6 shadow-md sticky top-0 z-50">
+    <h1 className="text-3xl font-bold">FABRI-DECO</h1>
+    <p className="text-sm text-gray-300 mt-1">
+      Trendy wears for Men, Women & Kids
+    </p>
+  </header>
+
+  {/* Sticky Category Bar */}
+  <div className="sticky top-[72px] bg-gray-50 z-50 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4">
+    {categories.map((cat) => (
+      <button
+        key={cat}
+        onClick={() =>
+          setSelectedCategory(selectedCategory === cat ? null : cat)
+        }
+        className={`inline-block mr-3 px-5 py-2 rounded-full font-semibold shadow-md transition transform hover:scale-105
+          ${
+            selectedCategory === cat
+              ? "bg-black text-white"
+              : "bg-white text-black hover:bg-gray-200"
+          }`}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
 
       {/* 4 Fixed Sections */}
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -117,3 +126,4 @@ function Home() {
 }
 
 export default Home;
+
