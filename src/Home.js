@@ -37,7 +37,6 @@ function Home() {
       )
     : products;
 
-  // Distribute products across 4 sections evenly
   const sections = [[], [], [], []];
   filteredProducts.forEach((product, idx) => {
     sections[idx % 4].push(product);
@@ -46,7 +45,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="fixed top-0 left-0 w-full bg-black text-white py-6 px-6 shadow-lg z-50">
+      <header className="fixed top-0 left-0 w-full bg-black text-white py-8 px-6 shadow-lg z-50">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-wide mb-2">
             🛍️ FABRI-DECO
@@ -57,8 +56,8 @@ function Home() {
         </div>
       </header>
 
-      {/* Category Bar (fixed below header, never hides) */}
-      <div className="fixed top-[88px] left-0 w-full bg-white z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
+      {/* Category Bar (moved further down to avoid header overlap) */}
+      <div className="fixed top-[160px] left-0 w-full bg-white z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -76,8 +75,8 @@ function Home() {
         ))}
       </div>
 
-      {/* Page Content (push down below fixed header + category) */}
-      <main className="pt-[160px] pb-10 px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Main content (push further down so nothing overlaps) */}
+      <main className="pt-[240px] pb-10 px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((sectionProducts, idx) => (
           <section
             key={idx}
