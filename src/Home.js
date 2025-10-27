@@ -26,7 +26,7 @@ function Home() {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 5000,
-    fade: false, // change to false to allow swipe
+    fade: false,
     swipeToSlide: true,
     pauseOnHover: true,
   };
@@ -46,7 +46,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-black text-white py-6 px-6 shadow-lg sticky top-0 z-50">
+      <header className="fixed top-0 left-0 w-full bg-black text-white py-6 px-6 shadow-lg z-50">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-wide mb-2">
             🛍️ FABRI-DECO
@@ -57,8 +57,8 @@ function Home() {
         </div>
       </header>
 
-      {/* Category Bar (sticky and visible below header) */}
-      <div className="sticky top-[72px] bg-white z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
+      {/* Category Bar (fixed below header, never hides) */}
+      <div className="fixed top-[88px] left-0 w-full bg-white z-40 py-3 shadow-md overflow-x-auto whitespace-nowrap px-4 border-t border-gray-200">
         {categories.map((cat) => (
           <button
             key={cat}
@@ -76,8 +76,8 @@ function Home() {
         ))}
       </div>
 
-      {/* Product Sections (4 total) */}
-      <main className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      {/* Page Content (push down below fixed header + category) */}
+      <main className="pt-[160px] pb-10 px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((sectionProducts, idx) => (
           <section
             key={idx}
